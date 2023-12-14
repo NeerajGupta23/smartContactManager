@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="CONTACT")
 public class Contact {
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int cId;
@@ -25,11 +24,9 @@ public class Contact {
 	private String image;
 	@Column(length = 5000)
 	private String description;
-	
 	@ManyToOne	
 	@JsonIgnore
 	private User user;
-	
 	public int getcId() {
 		return cId;
 	}
@@ -89,16 +86,4 @@ public class Contact {
 		// TODO Auto-generated method stub
 		return this.cId==((Contact)obj).getcId();
 	}
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
 }

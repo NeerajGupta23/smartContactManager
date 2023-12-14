@@ -50,31 +50,19 @@ public class UserController {
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private ContactRepository contactRepository;
-	
-	
-	
-	
-
-	
-
 	// method for adding common data to response
 	@ModelAttribute
 	public void addCommonData(Model model, Principal principal) {
 		String userName = principal.getName();
 		System.out.println("USERNAME " + userName);
-
 		// get the user using usernamne(Email)
-
 		User user = userRepository.getUserByUserName(userName);
 		System.out.println("USER " + user);
 		model.addAttribute("user", user);
-
 	}
 
 	// dashboard home
@@ -99,12 +87,9 @@ public class UserController {
 			Principal principal, HttpSession session) {
 
 		try {
-
 			String name = principal.getName();
 			User user = this.userRepository.getUserByUserName(name);
-
 			// processing and uploading file..
-
 			if (file.isEmpty()) {
 				// if the file is empty then try our message
 				System.out.println("File is empty");
@@ -113,30 +98,18 @@ public class UserController {
 			} else {
 				// file the file to folder and update the name to contact
 				contact.setImage(file.getOriginalFilename());
-
 				File saveFile = new ClassPathResource("static/img").getFile();
-
 				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
-
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
 				System.out.println("Image is uploaded");
-
 			}
-
 			user.getContacts().add(contact);
-
 			contact.setUser(user);
-
 			this.userRepository.save(user);
-
 			System.out.println("DATA " + contact);
-
 			System.out.println("Added to data base");
-
 			// message success.......
 			session.setAttribute("message", new Message("Your contact is added !! Add more..", "success"));
-
 		} catch (Exception e) {
 			System.out.println("ERROR " + e.getMessage());
 			e.printStackTrace();
@@ -144,7 +117,6 @@ public class UserController {
 			session.setAttribute("message", new Message("Some went wrong !! Try again..", "danger"));
 
 		}
-
 		return "normal/add_contact_form";
 	}
 
@@ -155,24 +127,17 @@ public class UserController {
 	public String showContacts(@PathVariable("page") Integer page, Model m, Principal principal) {
 		m.addAttribute("title", "Show User Contacts");
 		// contact ki list ko bhejni hai
-
 		String userName = principal.getName();
-
 		User user = this.userRepository.getUserByUserName(userName);
-
 		// currentPage-page
 		// Contact Per page - 5
 		Pageable pageable = PageRequest.of(page, 8);
-
 		Page<Contact> contacts = this.contactRepository.findContactsByUser(user.getId(), pageable);
-
 		m.addAttribute("contacts", contacts);
 		m.addAttribute("currentPage", page);
 		m.addAttribute("totalPages", contacts.getTotalPages());
-
 		return "normal/show_contacts";
 	}
-
 	// showing particular contact details.
 
 	@RequestMapping("/{cId}/contact")
